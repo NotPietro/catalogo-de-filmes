@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MetFlix</title>
+        <style>
+            body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #2980b9;
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: #8a0606;
+    outline: none;
+}
+
+button {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #3498db;
+}
+
+#listaFilmes {
+    list-style-type: none;
+    padding: 0;
+}
+
+#listaFilmes li {
+    background-color: #e7f3fe;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+#listaFilmes li:hover {
+    background-color: #d6e9f2;
+}
+
+        </style>
+    </head>
+    
+<body>
+    <div class="container">
+        <h1>Catálogo de Filmes</h1>
+        <h2>Cadastrar Filme</h2>
+        <form id="formFilme">
+            <label for="nome">Nome do Filme:</label><br>
+            <input type="text" id="nome" required><br>
+            <label for="classificacao">Classificação Indicativa:</label><br>
+            <input type="text" id="classificacao" required><br>
+            <label for="duracao">Duração (min):</label><br>
+            <input type="number" id="duracao" required><br>
+            <label for="genero">Gênero:</label><br>
+            <input type="text" id="genero" required><br>
+            <label for="ano">Ano de Lançamento:</label><br>
+            <input type="number" id="ano" required><br>
+            <label for="sinopse">Sinopse:</label><br>
+            <textarea id="sinopse" required></textarea><br>
+            <button type="submit">Cadastrar Filme</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Buscar Filme</h2>
+        <input type="text" id="buscaFilme" placeholder="Digite o nome do filme">
+        <button id="btnBuscar">Buscar</button>
+    </div>
+
+    <div class="container">
+        <h2>Filmes Cadastrados</h2>
+        <ul id="listaFilmes"></ul>
+    </div>
+
+    <script>
+        class Filme {
+            constructor(nome, classificacao, duracao, genero, anoLancamento, sinopse) {
+                this.nome = nome;
+                this.classificacao = classificacao;
+                this.duracao = duracao;
+                this.genero = genero;
+                this.anoLancamento = anoLancamento;
+                this.sinopse = sinopse;
+            }
+        }
+
+        class CatalogoStreaming {
+            constructor() {
+                this.filmes = [];
+            }
+
+            cadastrarFilme(filme) {
+                this.filmes.push(filme);
+                alert(`Filme "${filme.nome}" cadastrado com sucesso!`);
+                this.listarFilmes();
+            }
+
+            buscarFilme(nome) {
+                const filme = this.filmes.find(f => f.nome.toLowerCase() === nome.toLowerCase());
+                if (filme) {
+                    this.exibirDetalhesFilme(filme);
+                } else {
+                    alert("Filme não encontrado.");
+                }
+            }
+
+            exibirDetalhesFilme(filme) {
+                alert(`Nome: ${filme.nome}\nClassificação: ${filme.classificacao}\nDuração: ${filme.duracao} minutos\nGênero: ${filme.genero}\nAno de Lançamento: ${filme.anoLancamento}\nSinopse: ${filme.sinopse}`);
+            }
+
+            listarFilmes() {
+                const lista = document.getElementById('listaFilmes');
+                lista.innerHTML = '';
+                this.filmes.forEach(filme => {
+                    const li = document.createElement('li');
+                    li.textContent = filme.nome;
+                    lista.appendChild(li);
+                });
+            }
+        }
+
+        const catalogo = new CatalogoStreaming();
+
+        document.getElementById('formFilme').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const classificacao = document.getElementById('classificacao').value;
+            const duracao = parseInt(document.getElementById('duracao').value);
+            const genero = document.getElementById('genero').value;
+            const anoLancamento = parseInt(document.getElementById('ano').value);
+            const sinopse = document.getElementById('sinopse').value;
+            const novoFilme = new Filme(nome, classificacao, duracao, genero, anoLancamento, sinopse);
+            catalogo.cadastrarFilme(novoFilme);
+            this.reset();
+        });
+
+        document.getElementById('btnBuscar').addEventListener('click', function() {
+            const nomeBusca = document.getElementById('buscaFilme').value;
+            catalogo.buscarFilme(nomeBusca);
+        });
+    </script>
+</body>
+</html>
